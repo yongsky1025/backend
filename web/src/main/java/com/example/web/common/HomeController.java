@@ -1,4 +1,4 @@
-package com.example.web.controller;
+package com.example.web.common;
 
 import org.springframework.stereotype.Controller;
 
@@ -15,6 +15,11 @@ public class HomeController {
     public String getHome() {
     log.info("home으로 리턴");        
         return "home";
+    }
+    
+    @GetMapping("/separate")
+    public void getSparate() {
+        log.info("separate 호출");
     }
     
     
