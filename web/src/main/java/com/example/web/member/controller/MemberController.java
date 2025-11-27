@@ -57,6 +57,11 @@ public class MemberController {
         log.info("회원가입 post {}", dto);
 
         if (result.hasErrors()) {
+
+            for (Object fieldError : result.getAllErrors()) {
+                System.out.println(fieldError);
+            }
+
             return "/member/register";
         }
         
