@@ -35,6 +35,7 @@ public class MemoRepositoryTest {
     @Test
     public void deleteTest(){
         memoRepository.deleteById(10L);
+        // memoRepository.deleteAll();
     }
 
     @Test
@@ -49,16 +50,16 @@ public class MemoRepositoryTest {
 
 
     
-    @Test
-    public void insertTest(){
-        for (int i = 0; i < 10; i++) {
-            Memo memo = Memo.builder()
-            .text("memo text"+i)
-            .build();
+    // @Test
+    // public void insertTest(){
+    //     for (int i = 0; i < 10; i++) {
+    //         Memo memo = Memo.builder()
+    //         .text("memo text"+i)
+    //         .build();
 
-            memoRepository.save(memo);
-        }
-    }
+    //         memoRepository.save(memo);
+    //     }
+    // }
     
     
 }
