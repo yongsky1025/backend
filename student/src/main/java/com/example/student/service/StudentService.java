@@ -13,6 +13,7 @@ import com.example.student.repository.StudentRepository;
 
 import lombok.RequiredArgsConstructor;
 
+
 @RequiredArgsConstructor
 @Service
 public class StudentService {
@@ -24,7 +25,7 @@ public class StudentService {
     public String insert(StudentDTO dto){
         // dto => entity 변경
         Student student = modelMapper.map(dto, Student.class);
-        return  studentRepository.save(student).getName();
+        return studentRepository.save(student).getName();
     }
 
     public StudentDTO read(Long id){
@@ -34,12 +35,12 @@ public class StudentService {
     }
 
     public List<StudentDTO> readAll(){
-        // select ~~~ order by id, name
-        List<Student> result = studentRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-
         // entity => dto
         List<StudentDTO> list = new ArrayList<>();
-        for (StudentDTO student : list) {
+        
+        // select ~~~ order by id, name
+        List<Student> result = studentRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
+        for (Student student : result) {
             list.add(modelMapper.map(student, StudentDTO.class));
         }
         return list;
