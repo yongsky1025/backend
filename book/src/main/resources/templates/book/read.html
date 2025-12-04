@@ -6,7 +6,7 @@
         <h5 class="card-title fw-semibold mb-4">도서등록</h5>
         <div class="card">
           <div class="card-body">
-            <form action="" method="post" th:object="${bookDTO}">
+            <form action="" method="post">
               <div class="mb-3">
                 <label for="isbn" class="form-label">ISBN</label>
                 <input
@@ -15,37 +15,30 @@
                   id="isbn"
                   aria-describedby="isbn"
                   name="isbn"
-                  th:value="${bookDTO.isbn}"
+                  th:value="${dto.isbn}"
+                  readonly
                 />
-                <div class="text-danger" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></div>
               </div>
               <div class="mb-3">
                 <label for="title" class="form-label">TITLE</label>
-                <input type="text" class="form-control" id="title" name="title" th:value="${bookDTO.title}" />
-                <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                <input type="text" class="form-control" id="title" name="title" th:value="${dto.title}" readonly />
               </div>
               <div class="mb-3">
                 <label for="author" class="form-label">AUTHOR</label>
-                <input type="text" class="form-control" id="author" name="author" th:value="${bookDTO.author}" />
-                <div class="text-danger" th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></div>
+                <input type="text" class="form-control" id="author" name="author" th:value="${dto.author}" readonly />
               </div>
               <div class="mb-3">
                 <label for="price" class="form-label">PRICE</label>
-                <input type="number" class="form-control" id="price" name="price" th:value="${bookDTO.price}" />
-                <div class="text-danger" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+                <input type="number" class="form-control" id="price" name="price" th:value="${dto.price}" readonly />
               </div>
               <div class="mb-3">
                 <label for="description" class="form-label">DESCRIPTION</label>
-                <textarea
-                  type="text"
-                  class="form-control"
-                  id="description"
-                  name="description"
-                  rows="3"
-                  th:value="${bookDTO.description}"
-                ></textarea>
+                <textarea type="text" class="form-control" id="description" name="description" rows="3" readonly>
+[[${dto.description}]]
+                </textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <a type="button" class="btn btn-primary" th:href="@{/book/modify(id=${dto.id})}">수정</a>
+              <a type="button" class="btn btn-secondary" th:href="@{/book/list}">목록</a>
             </form>
           </div>
         </div>

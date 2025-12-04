@@ -46,6 +46,8 @@ public class Book {
     @Column(nullable = false)
     private String author;
 
+    private String description;
+
     // @CreatedDate
     // private LocalDateTime createDateTime;
     // @LastModifiedDate
@@ -53,5 +55,9 @@ public class Book {
 
     public void changePrice(int price) {
         this.price = price;
+    }
+
+    public void changeDescription(String description) {
+        this.description = description;
     }
 }
