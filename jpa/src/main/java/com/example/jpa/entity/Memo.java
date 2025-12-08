@@ -19,42 +19,40 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
-
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 
-@EntityListeners(value=AuditingEntityListener.class) // main => @EnableJpaAuditing
+// BaseEntity에서 상속받음
+// @EntityListeners(value = AuditingEntityListener.class)
+// // main => @EnableJpaAuditing
 @Entity
 @Table(name = "memotbl")
-public class Memo {
+public class Memo extends BaseEntity {
     // 테이블(memotbl)데이터베이스 컬럼 : mno, memo_text, create_date, update_date
     // 클래스 필드명 == 테이블 컬럼명
     // 클래스 필드명 != 테이블 컬럼명(@Column(name=""))
 
-
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 번호 하나씩 증가(auto increment)
     @Id // Entity사용할때 무조건, PK
-    @Column(name ="mno")
+    @Column(name = "mno")
     private Long id;
 
     @Column(nullable = false, name = "momo_text")
-    private String text; // 
+    private String text; //
 
-    @CreatedDate
-    private LocalDateTime createDate;
-    
-    @LastModifiedDate
-    private LocalDateTime updateDate;
+    // BaseEntity에서 상속받음
+    // @CreatedDate
+    // private LocalDateTime createDate;
 
+    // @LastModifiedDate
+    // private LocalDateTime updateDate;
 
     // text 수정 메소드
-    public void changeText(String text){
+    public void changeText(String text) {
         this.text = text;
     }
-
 
 }

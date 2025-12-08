@@ -26,17 +26,17 @@ import lombok.ToString;
 // 상세설명(item_detail), 판매상태(item_sell_status) : SELL, SOLDOUT
 // 등록시간, 수정시간
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Builder
 @ToString
 
-@EntityListeners(value = AuditingEntityListener.class)
+// BaseEntity에서 상속받으므로 필요 없음
+// @EntityListeners(value = AuditingEntityListener.class)
 @Table(name = "itemtbl")
 @Entity
-public class Item {
+public class Item extends BaseEntity {
 
     @Id
     private String code;
@@ -55,20 +55,22 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
 
-    @CreatedDate
-    private LocalDateTime createDate;
+    // BaseEntity에서 상속받음
+    // @CreatedDate
+    // private LocalDateTime createDate;
 
-    @LastModifiedDate
-    private LocalDateTime updateDate;
+    // @LastModifiedDate
+    // private LocalDateTime updateDate;
 
     // 메서드
     // 판매상태변경
-    public void changeStatus(ItemSellStatus itemSellStatus){
+    public void changeStatus(ItemSellStatus itemSellStatus) {
         this.itemSellStatus = itemSellStatus;
     }
+
     // 재고수량변경
-    public void changeStockNumber(int stockNumber){
+    public void changeStockNumber(int stockNumber) {
         this.stockNumber = stockNumber;
     }
-    
+
 }

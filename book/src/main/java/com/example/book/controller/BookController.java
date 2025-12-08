@@ -78,7 +78,7 @@ public class BookController {
     }
 
     @PostMapping("/remove")
-    public String postMethodName(@RequestParam("id") Long id, RedirectAttributes rttr) {
+    public String postRemove(@RequestParam("id") Long id, RedirectAttributes rttr) {
         log.info("book 삭제 {}", id);
 
         bookService.delete(id);

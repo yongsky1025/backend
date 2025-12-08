@@ -19,18 +19,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 
-
-@EntityListeners(value = AuditingEntityListener.class)
-@Table(name="boardtbl")
+// BaseEntity에서 상속받으므로 필요 없음
+// @EntityListeners(value = AuditingEntityListener.class)
+@Table(name = "boardtbl")
 @Entity
-public class Board {
+public class Board extends BaseEntity {
     // id(자동 순번), 제목(title), 내용(content-1500)not null, 작성자(writer-20)not null
     // 작성일, 수정일
 
@@ -42,23 +41,24 @@ public class Board {
 
     @Column(nullable = false, length = 1500)
     private String content;
-    
+
     @Column(nullable = false, length = 20)
     private String writer;
 
-    @CreatedDate
-    private LocalDateTime createDateTime;
-    
-    @LastModifiedDate
-    private LocalDateTime updateDateTime;
+    // BaseEntity에게 상속받음
+    // @CreatedDate
+    // private LocalDateTime createDateTime;
 
+    // @LastModifiedDate
+    // private LocalDateTime updateDateTime;
 
     // 메서드
     // 보드 수정
-    public void changeContent(String content){
+    public void changeContent(String content) {
         this.content = content;
     }
-    public void changeTitle(String title){
+
+    public void changeTitle(String title) {
         this.title = title;
 
     }

@@ -26,22 +26,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-
-@EntityListeners(value = AuditingEntityListener.class)
+// BaseEntity에서 상속받음
+// @EntityListeners(value = AuditingEntityListener.class)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
 
-
 @Table(name = "stutbl")
 @Entity // == 이 클래스는 테이블과 연동되어 있음
-public class Student {
+public class Student extends BaseEntity {
 
-    // @GeneratedValue(strategy = GenerationType.AUTO) // == @GeneratedValue : default(Hibernate 가 자동으로 생성)
-    // @SequenceGenerator(name = "stu_seq_gen", sequenceName = "stu_seq", allocationSize = 1)
-    // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "stu_seq_gen")
+    // @GeneratedValue(strategy = GenerationType.AUTO) // == @GeneratedValue :
+    // default(Hibernate 가 자동으로 생성)
+    // @SequenceGenerator(name = "stu_seq_gen", sequenceName = "stu_seq",
+    // allocationSize = 1)
+    // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator =
+    // "stu_seq_gen")
     @GeneratedValue(strategy = GenerationType.IDENTITY) // MySQL(auto_incerement), Oracle(sequence)
     @Id
     private Long id;
@@ -55,7 +57,7 @@ public class Student {
 
     @Column(columnDefinition = "varchar(1) CONSTRAINT chk_gender CHECK (gender IN ('M','F'))")
     private String gender;
-    
+
     // grade = > FRESHMAN, SOPHOMORE, JUNIOR, SENIOR
     @Enumerated(EnumType.STRING)
     @Column
@@ -63,20 +65,19 @@ public class Student {
 
     @CreationTimestamp // insert 시 자동으로 일자 삽입
     private LocalDateTime createDateTime1; // create_date_time1
-    
-    @CreatedDate // spring boot 설정 후 삽입
-    private LocalDateTime createDateTime2; // create_date_time2
 
-    @LastModifiedDate // spring boot 설정 후 삽입
-    private LocalDateTime updateDateTime;
+    // BaseEntity에서 상속받음
+    // @CreatedDate // spring boot 설정 후 삽입
+    // private LocalDateTime createDateTime2; // create_date_time2
 
+    // @LastModifiedDate // spring boot 설정 후 삽입
+    // private LocalDateTime updateDateTime;
 
-    public void changeName(String name){
-        this.name=name;
+    public void changeName(String name) {
+        this.name = name;
     }
 
-
-    public void changeGrade(Grade grade){
+    public void changeGrade(Grade grade) {
         this.grade = grade;
     }
 }

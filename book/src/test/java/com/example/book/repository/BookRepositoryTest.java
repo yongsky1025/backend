@@ -14,7 +14,7 @@ import com.example.book.entity.Book;
 
 import jakarta.persistence.EntityNotFoundException;
 
-@Disabled
+// @Disabled
 @SpringBootTest
 public class BookRepositoryTest {
 
@@ -81,7 +81,6 @@ public class BookRepositoryTest {
         book.changePrice(30000);
 
         System.out.println(bookRepository.save(book));
-
     }
 
     @Test
