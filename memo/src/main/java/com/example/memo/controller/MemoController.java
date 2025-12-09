@@ -53,6 +53,7 @@ public class MemoController {
         Long id = memoService.modify(dto);
 
         // /memo/read 이동
+        rttr.addFlashAttribute("msg", id + " 번 메모가 수정되었습니다.");
         rttr.addAttribute("id", id);
         return "redirect:/memo/read";
     }

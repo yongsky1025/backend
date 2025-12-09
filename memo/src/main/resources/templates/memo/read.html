@@ -15,4 +15,19 @@
       <a type="button" class="btn btn-outline-primary" th:href="@{/memo/modify(id=${dto.id})}">수정</a>
     </form>
   </div>
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+      let msg = [[${msg}]]; // 에러 상관없음
+      console.log(msg);
+
+      if (msg) {
+
+        Swal.fire({
+          title: msg,
+          icon: "success",
+          draggable: true,
+        });
+      }
+    </script>
+  </th:block>
 </html>
