@@ -8,14 +8,18 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.book.dto.BookDTO;
 import com.example.book.entity.Book;
+import com.example.book.entity.QBook;
 
 import jakarta.persistence.EntityNotFoundException;
 
-// @Disabled
+@Disabled
 @SpringBootTest
 public class BookRepositoryTest {
 
@@ -108,6 +112,62 @@ public class BookRepositoryTest {
 
         list = bookRepository.findByPriceBetween(12000, 35000);
         System.out.println("findByPriceBetween(12000~35000)" + list);
+    }
+
+    @Test
+    public void pageTest() {
+        // bookRepository.findAll(pageable pageable);
+        // limit ?, ? : 특정 범위만 가져오기
+        // select count(b1_0.id) : 전체 행의 개수
+        PageRequest pageRequest = PageRequest.of(0, 20);
+        Page<Book> result = bookRepository.findAll(pageRequest);
+
+        System.out.println("page size " + result.getSize());
+        System.out.println("TotalPages " + result.getTotalPages());
+        System.out.println("page Elements(전체 행 개수) " + result.getTotalElements());
+        System.out.println("page Content " + result.getContent());
+    }
+
+    // -----------------------
+    // querydsl 라이브러리 추가 / QuerydslPredicate
+    // -----------------------
+
+    @Test
+    public void querydslTest() {
+
+        QBook book = QBook.book;
+
+        // eq()
+        // where b1_0.title=?
+        System.out.println(bookRepository.findAll(book.title.eq("파워 자바1")));
+        // contains()
+        // where b1_0.title like ? escape '!'
+        System.out.println(bookRepository.findAll(book.title.contains("파워")));
+        // contains().and
+        // where b1_0.title like ? escape '!'
+        // and b1_0.id>?
+        System.out.println(bookRepository.findAll(book.title.contains("파워").and(book.id.gt(3))));
+
+        // contains().and, Sort.by().descending()
+        // where
+        // b1_0.title like ? escape '!'
+        // and b1_0.id>?
+        // order by
+        // b1_0.id desc
+        System.out.println(bookRepository.findAll(book.title.contains("파워")
+                .and(book.id.gt(3)), Sort.by("id").descending()));
+
+        // contains().or
+        // where
+        // b1_0.title like ? escape '!'
+        // or b1_0.author like ? escape '!'
+        // where author'%천%' or title = '%파워%'
+        System.out.println(bookRepository.findAll(book.title.contains("파워").or(book.author.contains("천"))));
+
+        // bookRepository.findAll(pageable pageable);
+        PageRequest pageRequest = PageRequest.of(0, 20);
+        Page<Book> result = bookRepository.findAll(book.id.gt(0L), pageRequest);
 
     }
+
 }
