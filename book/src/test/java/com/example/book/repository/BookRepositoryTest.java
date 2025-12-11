@@ -170,4 +170,10 @@ public class BookRepositoryTest {
 
     }
 
+    @Test
+    public void querydslTest2() {
+
+        bookRepository.makePredicate("t", "파워");
+
+    }
 }

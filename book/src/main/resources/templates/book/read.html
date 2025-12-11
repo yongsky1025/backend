@@ -37,8 +37,19 @@
 [[${dto.description}]]
                 </textarea>
               </div>
-              <a type="button" class="btn btn-primary" th:href="@{/book/modify(id=${dto.id})}">수정</a>
-              <a type="button" class="btn btn-secondary" th:href="@{/book/list}">목록</a>
+              <a
+                type="button"
+                class="btn btn-success"
+                th:href="@{/book/modify(id=${dto.id},page=${pageRequestDTO.page},size=${pageRequestDTO.size})}"
+                >수정</a
+              >
+              <a
+                type="button"
+                class="btn btn-secondary"
+                th:href="@{/book/list(page=${pageRequestDTO.page},size=${pageRequestDTO.size})}"
+                >목록</a
+              >
+              <!-- <input type="hidden" name="page" th:value="${pageRequestDTO.page}" /> -->
             </form>
           </div>
         </div>

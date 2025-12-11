@@ -1,5 +1,6 @@
 package com.example.book.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,5 +18,9 @@ public class PageRequestDTO {
 
     @Builder.Default
     private int size = 20;
+
+    private String type;
+
+    private String keyword;
 
 }
