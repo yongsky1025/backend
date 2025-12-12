@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" layout:decorate="~{layouts/layout}">
+  <div layout:fragment="content">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title fw-semibold mb-4">BOARD</h5>
+        <div class="card">
+          <div class="card-body">
+            <form action="" method="post">
+              <div class="mb-3">
+                <label for="bno" class="form-label">BNO</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="bno"
+                  aria-describedby="bno"
+                  name="bno"
+                  th:value="${dto.bno}"
+                  readonly
+                />
+              </div>
+              <div class="mb-3">
+                <label for="title" class="form-label">TITLE</label>
+                <input type="text" class="form-control" id="title" name="title" th:value="${dto.title}" readonly />
+              </div>
+              <div class="mb-3">
+                <label for="content" class="form-label">CONTENT</label>
+                <textarea name="content" id="content" rows="10" class="form-control" disabled>
+[[${dto.content}]]</textarea
+                >
+              </div>
+              <div class="mb-3">
+                <label for="createDate" class="form-label">CREATEDATE</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="createDate"
+                  name="createDate"
+                  th:value="${#temporals.format(dto.createDate, 'yyyy-MM-dd HH:mm')}"
+                  readonly
+                />
+              </div>
+              <a
+                type="button"
+                class="btn btn-success"
+                th:href="@{/board/modify(bno=${dto.bno},page=${pageRequestDTO.page},size=${pageRequestDTO.size})}"
+                >수정</a
+              >
+              <a
+                type="button"
+                class="btn btn-secondary"
+                th:href="@{/board/list(page=${pageRequestDTO.page},size=${pageRequestDTO.size})}"
+                >목록</a
+              >
+              <!-- <input type="hidden" name="page" th:value="${pageRequestDTO.page}" /> -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <th:block layout:fragment="script">
+    <script th:inline="javascript">
+      let msg = [[${msg}]]; // 에러 상관없음
+      console.log(msg);
+
+      if (msg) {
+
+        Swal.fire({
+          title: msg,
+          icon: "success",
+          draggable: true,
+        });
+      }
+    </script>
+  </th:block>
+</html>
