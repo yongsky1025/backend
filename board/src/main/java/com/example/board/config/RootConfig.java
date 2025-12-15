@@ -13,11 +13,10 @@ public class RootConfig {
         ModelMapper modelMapper = new ModelMapper();
         modelMapper.getConfiguration()
                 .setFieldMatchingEnabled(true) // 필드명 같은경우 매핑
-                // getter, setter 없이도 private 필드 접근 허용
+                // getter,setter 없이도 private 필드 접근 허용
                 .setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE)
                 // userName, user_name : 비슷한 이름이면 알아서 매핑
                 .setMatchingStrategy(MatchingStrategies.LOOSE);
         return modelMapper;
     }
-
 }

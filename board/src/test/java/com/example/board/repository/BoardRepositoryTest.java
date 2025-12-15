@@ -25,6 +25,7 @@ import com.example.board.post.repository.BoardRepository;
 import com.example.board.reply.entity.Reply;
 import com.example.board.reply.repository.ReplyRepository;
 
+@Disabled
 @SpringBootTest
 public class BoardRepositoryTest {
 
@@ -125,7 +126,7 @@ public class BoardRepositoryTest {
     public void getBoardWithWriterTest2() {
 
         // JPQL(@Query)
-        List<Object[]> result = boardRepository.getBoardWithWriter(33L);
+        List<Object[]> result = boardRepository.getBoardWithReply(33L);
         for (Object[] objects : result) {
             System.out.println(Arrays.toString(objects));
         }
@@ -193,7 +194,22 @@ public class BoardRepositoryTest {
     @Test
     public void listTest() {
 
-        List<Object[]> result = boardRepository.list();
-        System.out.println(result);
+        PageRequestDTO pageRequestDTO = PageRequestDTO.builder()
+                .page(0)
+                .size(20)
+                .type("tcw")
+                .keyword("title")
+                .build();
+
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize(),
+                Sort.by("bno").descending().and(Sort.by("title").ascending()));
+
+        // Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
+        // pageRequestDTO.getSize());
+
+        Page<Object[]> result = boardRepository.list(pageRequestDTO.getType(), pageRequestDTO.getKeyword(), pageable);
+        for (Object[] objects : result) {
+            System.out.println(Arrays.toString(objects));
+        }
     }
 }

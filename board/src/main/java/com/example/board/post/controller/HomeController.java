@@ -12,7 +12,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String getHome() {
-        log.info("home 호출");
         return "home";
     }
 

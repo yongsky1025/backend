@@ -1,7 +1,12 @@
 package com.example.board.post.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.example.board.member.entity.Member;
 import com.example.board.reply.entity.Reply;
@@ -21,21 +26,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import lombok.ToString;
 
-@Builder
+@ToString(exclude = { "writer", "replies" })
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = { "writer", "replies" })
-
-// BaseEntity에서 상속받으므로 필요 없음
-// @EntityListeners(value = AuditingEntityListener.class)
 @Table(name = "boardtbl")
 @Entity
 public class Board extends BaseEntity {
-    // id(자동 순번), 제목(title), 내용(content-1500)not null, 작성자(writer-20)not null
-    // 작성일, 수정일
+    // id(자동 순번), 제목(title), 내용(content-1500), 작성자(writer-20)
+    // 작성일,수정일
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -56,7 +59,6 @@ public class Board extends BaseEntity {
     @OneToMany(mappedBy = "board")
     private List<Reply> replies = new ArrayList<>();
 
-    // 메서드
     public void changeTitle(String title) {
         this.title = title;
     }

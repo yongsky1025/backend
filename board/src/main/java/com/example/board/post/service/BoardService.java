@@ -28,28 +28,44 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final BoardRepository boardRepository;
+    private final BoardRepository boardRespository;
     private final ReplyRepository replyRepository;
 
     // crud
-    public void delete(BoardDTO dto) {
-        replyRepository.deleteByBno(dto.getBno());
-        boardRepository.deleteById(dto.getBno());
+    public Long insert(BoardDTO dto) {
+        // 게시글 등록
 
+        Member member = Member.builder()
+                .email(dto.getWriterEmail())
+                .build();
+
+        Board board = Board.builder()
+                .title(dto.getTitle())
+                .content(dto.getContent())
+                .writer(member)
+                .build();
+        return boardRespository.save(board).getBno();
+    }
+
+    public void delete(BoardDTO dto) {
+        // 게시글 삭제
+        // 자식으로 댓글 존재
+        replyRepository.deleteByBno(dto.getBno());
+        boardRespository.deleteById(dto.getBno());
     }
 
     public void update(BoardDTO dto) {
 
-        Board board = boardRepository.findById(dto.getBno()).get();
+        Board board = boardRespository.findById(dto.getBno()).get();
         board.changeTitle(dto.getTitle());
         board.changeContent(dto.getContent());
 
-        // boardRepository.save(board);
+        // boardRespository.save(null);
     }
 
     @Transactional(readOnly = true)
     public BoardDTO getRow(Long bno) {
-        Object result = boardRepository.getBoardByBno(bno);
+        Object result = boardRespository.getBoardByBno(bno);
 
         Object[] arr = (Object[]) result;
 
@@ -60,11 +76,20 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public PageResultDTO<BoardDTO> getList(PageRequestDTO requestDTO) {
+
         Pageable pageable = PageRequest.of(requestDTO.getPage() - 1, requestDTO.getSize(),
                 Sort.by("bno").descending());
-        Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageable);
 
-        // 번호, 제목(댓글개수), 작성자, 작성일
+        // @Query 사용
+        // Page<Object[]> result = boardRespository.getBoardWithReplyCount(pageable);
+
+        Page<Object[]> result = boardRespository.list(requestDTO.getType(),
+                requestDTO.getKeyword(), pageable);
+
+        // [Board(bno=91, title=title....91, content=content....91),
+        // Member(email=user6@gmail.com, password=1111, name=user6), 1]
+
+        // 번호,제목(댓글개수),작성자,작성일
         Function<Object[], BoardDTO> f = en -> entityToDto((Board) en[0], (Member) en[1], (Long) en[2]);
 
         List<BoardDTO> dtoList = result.stream().map(f).collect(Collectors.toList());
@@ -76,9 +101,6 @@ public class BoardService {
                 .totalCount(totalCount).build();
 
         return pageResultDTO;
-    }
-
-    public void insert(BoardDTO dto) {
     }
 
     // entity => dto
@@ -94,6 +116,7 @@ public class BoardService {
                 .updateDate(board.getUpdateDate())
                 .replyCnt(replyCnt != null ? replyCnt.intValue() : 0)
                 .build();
+
         return dto;
     }
 }

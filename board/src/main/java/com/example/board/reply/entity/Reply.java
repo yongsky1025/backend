@@ -16,13 +16,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import lombok.ToString;
 
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @ToString(exclude = { "board" })
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "replytbl")
 @Entity
 public class Reply extends BaseEntity {
@@ -40,5 +41,4 @@ public class Reply extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "bno")
     private Board board;
-
 }

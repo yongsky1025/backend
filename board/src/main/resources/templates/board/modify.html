@@ -3,21 +3,13 @@
   <div layout:fragment="content">
     <div class="card">
       <div class="card-body">
-        <h5 class="card-title fw-semibold mb-4">BOARD MODIFY</h5>
+        <h5 class="card-title fw-semibold mb-4">도서수정</h5>
         <div class="card">
           <div class="card-body">
             <form action="" method="post">
               <div class="mb-3">
                 <label for="bno" class="form-label">BNO</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="bno"
-                  aria-describedby="bno"
-                  name="bno"
-                  th:value="${dto.bno}"
-                  readonly
-                />
+                <input type="text" class="form-control" id="bno" aria-describedby="bno" name="bno" th:value="${dto.bno}" readonly />
               </div>
               <div class="mb-3">
                 <label for="title" class="form-label">TITLE</label>
@@ -43,19 +35,14 @@
               <input type="hidden" name="size" th:value="${pageRequestDTO.size}" />
               <button type="submit" class="btn btn-success">수정</button>
               <button type="button" class="btn btn-danger">삭제</button>
-              <a
-                type="button"
-                class="btn btn-secondary"
-                th:href="@{/board/list(page=${pageRequestDTO.page},size=${pageRequestDTO.size})}"
-                >목록</a
-              >
+              <a type="button" class="btn btn-primary" th:href="@{/board/list(page=${pageRequestDTO.page},size=${pageRequestDTO.size})}">목록</a>
+              <!-- <input type="hidden" name="page" th:value="${requestDTO.page}" /> -->
             </form>
           </div>
         </div>
       </div>
     </div>
   </div>
-
   <th:block layout:fragment="script">
     <script th:src="@{/js/modify.js}"></script>
   </th:block>
