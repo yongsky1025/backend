@@ -65,7 +65,7 @@ public class MemoRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> put(@PathVariable("id") Long id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) {
         log.info("삭제 {}", id);
 
         memoService.remove(id);

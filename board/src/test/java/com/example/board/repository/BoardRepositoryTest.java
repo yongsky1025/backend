@@ -25,7 +25,7 @@ import com.example.board.post.repository.BoardRepository;
 import com.example.board.reply.entity.Reply;
 import com.example.board.reply.repository.ReplyRepository;
 
-@Disabled
+// @Disabled
 @SpringBootTest
 public class BoardRepositoryTest {
 
@@ -88,6 +88,22 @@ public class BoardRepositoryTest {
         });
     }
 
+    @Disabled
+    @Test
+    public void insertReplyTest2() {
+        Board board = Board.builder().bno(101L).build();
+
+        IntStream.rangeClosed(1, 15).forEach(i -> {
+
+            Reply reply = Reply.builder()
+                    .text("reply...." + i)
+                    .replyer("guest" + i)
+                    .board(board)
+                    .build();
+            replyRepository.save(reply);
+        });
+    }
+
     // board 읽기
     @Transactional(readOnly = true)
     @Test
@@ -126,48 +142,48 @@ public class BoardRepositoryTest {
     public void getBoardWithWriterTest2() {
 
         // JPQL(@Query)
-        List<Object[]> result = boardRepository.getBoardWithReply(33L);
+        List<Object[]> result = boardRepository.getBoardWithReply(101L);
         for (Object[] objects : result) {
             System.out.println(Arrays.toString(objects));
         }
     }
 
-    @Test
-    public void getBoardWithReplyCountTest() {
+    // @Test
+    // public void getBoardWithReplyCountTest() {
 
-        Pageable pageable = PageRequest.of(0, 10,
-                Sort.by("bno").descending());
+    // Pageable pageable = PageRequest.of(0, 10,
+    // Sort.by("bno").descending());
 
-        Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageable);
-        // for (Object[] objects : result) {
-        // // System.out.println(Arrays.toString(objects));
-        // Board board = (Board) objects[0];
-        // Member member = (Member) objects[1];
-        // Long replyCnt = (Long) objects[2];
+    // Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageable);
+    // // for (Object[] objects : result) {
+    // // // System.out.println(Arrays.toString(objects));
+    // // Board board = (Board) objects[0];
+    // // Member member = (Member) objects[1];
+    // // Long replyCnt = (Long) objects[2];
 
-        // System.out.println(board);
-        // System.out.println(member);
-        // System.out.println(replyCnt);
-        // }
+    // // System.out.println(board);
+    // // System.out.println(member);
+    // // System.out.println(replyCnt);
+    // // }
 
-        // Stream<Object[]> data = result.get();
-        // Stream<Object[]> data2 = result.getContent().stream();
+    // // Stream<Object[]> data = result.get();
+    // // Stream<Object[]> data2 = result.getContent().stream();
 
-        result.get().forEach(obj -> {
-            // System.out.println(Arrays.toString(obj);
-            Board board = (Board) obj[0];
-            Member member = (Member) obj[1];
-            Long replyCnt = (Long) obj[2];
-            System.out.println(board);
-            System.out.println(member);
-            System.out.println(replyCnt);
-        });
+    // result.get().forEach(obj -> {
+    // // System.out.println(Arrays.toString(obj);
+    // Board board = (Board) obj[0];
+    // Member member = (Member) obj[1];
+    // Long replyCnt = (Long) obj[2];
+    // System.out.println(board);
+    // System.out.println(member);
+    // System.out.println(replyCnt);
+    // });
 
-        // Object[] objects
-        Function<Object[], String> f = Arrays::toString;
-        result.get().forEach(obj -> System.out.println(f.apply(obj)));
+    // // Object[] objects
+    // Function<Object[], String> f = Arrays::toString;
+    // result.get().forEach(obj -> System.out.println(f.apply(obj)));
 
-    }
+    // }
 
     @Test
     public void getBoardByBnoTest() {
