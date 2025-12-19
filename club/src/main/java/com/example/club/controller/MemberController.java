@@ -23,6 +23,11 @@ public class MemberController {
         log.info("로그인 폼 요청");
     }
 
+    @GetMapping("/profile")
+    public void getPofile() {
+        log.info("프로필 폼 요청");
+    }
+
     // org.springframework.security.core.Authentication
     @ResponseBody
     @GetMapping("/auth")

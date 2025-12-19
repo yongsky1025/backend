@@ -15,4 +15,9 @@ public class HomeController {
         return "home";
     }
 
+    @GetMapping("/manager/info")
+    public void getManager() {
+        log.info("user 호출");
+    }
+
 }
