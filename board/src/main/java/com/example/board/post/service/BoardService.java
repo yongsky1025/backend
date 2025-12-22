@@ -83,13 +83,14 @@ public class BoardService {
         // @Query 사용
         // Page<Object[]> result = boardRespository.getBoardWithReplyCount(pageable);
 
-        Page<Object[]> result = boardRespository.list(requestDTO.getType(),
-                requestDTO.getKeyword(), pageable);
+        Page<Object[]> result = boardRespository.list(requestDTO.getType(), requestDTO.getKeyword(), pageable);
 
         // [Board(bno=91, title=title....91, content=content....91),
         // Member(email=user6@gmail.com, password=1111, name=user6), 1]
 
         // 번호,제목(댓글개수),작성자,작성일
+        // [Board(bno=499, title=title....99, content=content....99), user2@gmail.com,
+        // 0]
         Function<Object[], BoardDTO> f = en -> entityToDto((Board) en[0], (Member) en[1], (Long) en[2]);
 
         List<BoardDTO> dtoList = result.stream().map(f).collect(Collectors.toList());

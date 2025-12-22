@@ -1,7 +1,14 @@
 package com.example.board.member.entity;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.example.board.member.entity.constant.MemberRole;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,4 +37,14 @@ public class Member {
 
     @Column(nullable = false)
     private String name;
+
+    private boolean fromSocial;
+
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private Set<MemberRole> roles = new HashSet<>();
+
+    public void addMemberRole(MemberRole role) {
+        roles.add(role);
+    }
 }

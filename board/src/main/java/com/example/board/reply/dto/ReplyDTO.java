@@ -16,10 +16,13 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReplyDTO {
-
     private Long rno;
+
     private String text;
-    private String replyer;
+
+    private String replyerEmail;
+    private String replyerName;
+
     private Long bno;
 
     private LocalDateTime createDate;

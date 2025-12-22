@@ -44,25 +44,22 @@ public class ReplyController {
     @PutMapping("/{rno}")
     public Long putReply(@RequestBody ReplyDTO dto) {
         log.info("수정 요청 {}", dto);
-
         Long rno = replyService.update(dto);
-
         return rno;
     }
 
     // bno 를 이용해서 전체 reply 가져오기
     @GetMapping("/board/{bno}")
-    public List<ReplyDTO> getList(@PathVariable("bno") Long bno) {
+    public List<ReplyDTO> getList(@PathVariable Long bno) {
 
         log.info("{} 댓글 요청", bno);
 
         return replyService.getList(bno);
-
     }
 
-    // bno 를 이용해서 1개의 reply 가져오기
+    // rno를 이용해서 특정 reply 가져오기
     @GetMapping("/{rno}")
-    public ReplyDTO getRow(@PathVariable("rno") Long rno) {
+    public ReplyDTO getRow(@PathVariable Long rno) {
 
         log.info("{} 댓글 요청", rno);
 

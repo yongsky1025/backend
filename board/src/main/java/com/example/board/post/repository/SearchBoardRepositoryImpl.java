@@ -3,10 +3,12 @@ package com.example.board.post.repository;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
 import com.example.board.member.entity.QMember;
@@ -62,11 +64,9 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
                     case "t":
                         conditionBuilder.or(board.title.contains(keyword));
                         break;
-
                     case "c":
                         conditionBuilder.or(board.content.contains(keyword));
                         break;
-
                     case "w":
                         // conditionBuilder.or(board.writer.email.contains(keyword));
                         conditionBuilder.or(member.email.contains(keyword));
@@ -82,11 +82,13 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         Sort sort = pageable.getSort();
 
         // sort 기준이 여러개 있을 수 있다.
+        // Sort.by("bno").descending().and(Sort.by("title").ascending()
         sort.stream().forEach(order -> {
             Order direction = order.isAscending() ? Order.ASC : Order.DESC;
 
             String prop = order.getProperty();
-            PathBuilder orderByExpression = new PathBuilder<>(Board.class, "board");
+            PathBuilder<Board> orderByExpression = new PathBuilder<>(Board.class,
+                    "board");
             tuple.orderBy(new OrderSpecifier(direction, orderByExpression.get(prop)));
         });
 
@@ -98,12 +100,12 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         tuple.offset(pageable.getOffset());
         tuple.limit(pageable.getPageSize());
 
-        log.info("==========================");
+        log.info("=====================");
         log.info(query);
-        log.info("==========================");
+        log.info("=====================");
 
         List<Tuple> result = tuple.fetch();
-        long count = tuple.fetchCount(); // 전체 갯수
+        long count = tuple.fetchCount(); // 전체개수
 
         // List<Tuple> => List<Object[]> 변경
         List<Object[]> list = result.stream().map(t -> t.toArray()).collect(Collectors.toList());
@@ -131,7 +133,6 @@ public class SearchBoardRepositoryImpl extends QuerydslRepositorySupport impleme
         Tuple result = tuple.fetchFirst();
 
         return result.toArray();
-
     }
 
 }

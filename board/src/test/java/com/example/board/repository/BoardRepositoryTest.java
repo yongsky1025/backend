@@ -14,10 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.Commit;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.board.member.entity.Member;
+import com.example.board.member.entity.constant.MemberRole;
 import com.example.board.member.repository.MemberRepository;
 import com.example.board.post.dto.PageRequestDTO;
 import com.example.board.post.entity.Board;
@@ -25,12 +27,15 @@ import com.example.board.post.repository.BoardRepository;
 import com.example.board.reply.entity.Reply;
 import com.example.board.reply.repository.ReplyRepository;
 
-// @Disabled
+@Disabled
 @SpringBootTest
 public class BoardRepositoryTest {
 
     @Autowired
-    private BoardRepository boardRepository;
+    private BoardRepository boardRespository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -38,21 +43,25 @@ public class BoardRepositoryTest {
     @Autowired
     private ReplyRepository replyRepository;
 
-    @Disabled
     @Test
     public void insertMemberTest() {
         IntStream.rangeClosed(1, 10).forEach(i -> {
             Member member = Member.builder()
                     .email("user" + i + "@gmail.com")
-                    .password("1111")
+                    .password(passwordEncoder.encode("1111"))
+                    .fromSocial(false)
                     .name("user" + i)
                     .build();
-            memberRepository.save(member);
+            member.addMemberRole(MemberRole.USER);
 
+            if (i > 9) {
+                member.addMemberRole(MemberRole.ADMIN);
+            }
+
+            memberRepository.save(member);
         });
     }
 
-    @Disabled
     @Test
     public void insertBoardTest() {
         IntStream.rangeClosed(1, 100).forEach(i -> {
@@ -65,102 +74,96 @@ public class BoardRepositoryTest {
                     .content("content...." + i)
                     .writer(member)
                     .build();
-            boardRepository.save(board);
-
+            boardRespository.save(board);
         });
     }
 
-    @Disabled
     @Test
     public void insertReplyTest() {
         IntStream.rangeClosed(1, 100).forEach(i -> {
 
             long idx = (long) (Math.random() * 100) + 1;
-
             Board board = Board.builder().bno(idx).build();
 
+            int midx = (int) (Math.random() * 10) + 1;
+            Member member = Member.builder().email("user" + midx + "@gmail.com").build();
+
             Reply reply = Reply.builder()
                     .text("reply...." + i)
-                    .replyer("guest" + i)
-                    .board(board)
-                    .build();
+                    .replyer(member).board(board).build();
+
             replyRepository.save(reply);
         });
     }
 
-    @Disabled
-    @Test
-    public void insertReplyTest2() {
-        Board board = Board.builder().bno(101L).build();
+    // @Test
+    // public void insertReplyTest2() {
+    // Board board = Board.builder().bno(601L).build();
 
-        IntStream.rangeClosed(1, 15).forEach(i -> {
+    // IntStream.rangeClosed(1, 15).forEach(i -> {
 
-            Reply reply = Reply.builder()
-                    .text("reply...." + i)
-                    .replyer("guest" + i)
-                    .board(board)
-                    .build();
-            replyRepository.save(reply);
-        });
-    }
+    // Reply reply = Reply.builder().text("reply...." + i).replyer("guest" +
+    // i).board(board).build();
+
+    // replyRepository.save(reply);
+    // });
+    // }
 
     // board 읽기
     @Transactional(readOnly = true)
     @Test
     public void readBoardTest() {
         // JPA 제공
-        List<Board> list = boardRepository.findAll();
+        List<Board> list = boardRespository.findAll();
         list.forEach(board -> {
             System.out.println(board);
             System.out.println(board.getWriter());
         });
-
     }
 
     @Test
-    public void getBoardWithWriterListrTest() {
+    public void getBoardWithWriterListTest() {
 
-        List<Object[]> result = boardRepository.getBoardWithWriterList();
+        // [Board(bno=98, title=title....98, content=content....98),
+        // Member(email=user9@gmail.com, password=1111, name=user9)]
+        List<Object[]> result = boardRespository.getBoardWithWriterList();
         for (Object[] objects : result) {
             System.out.println(Arrays.toString(objects));
         }
-
     }
 
     @Transactional(readOnly = true)
     @Test
     public void getBoardWithWriterTest() {
-
-        Board board = boardRepository.findById(33L).get();
+        // JPA
+        Board board = boardRespository.findById(33L).get();
         System.out.println(board);
         // 댓글 가져오기
         System.out.println(board.getReplies());
-
     }
 
     @Test
     public void getBoardWithWriterTest2() {
-
         // JPQL(@Query)
-        List<Object[]> result = boardRepository.getBoardWithReply(101L);
-        for (Object[] objects : result) {
-            System.out.println(Arrays.toString(objects));
-        }
+        List<Object[]> result = boardRespository.getBoardWithReply(33L);
+        // for (Object[] objects : result) {
+        // System.out.println(Arrays.toString(objects));
+        // }
+
+        result.forEach(obj -> System.out.println(Arrays.toString(obj)));
     }
 
     // @Test
     // public void getBoardWithReplyCountTest() {
 
-    // Pageable pageable = PageRequest.of(0, 10,
-    // Sort.by("bno").descending());
+    // Pageable pageable = PageRequest.of(0, 10, Sort.by("bno").descending());
 
-    // Page<Object[]> result = boardRepository.getBoardWithReplyCount(pageable);
+    // Page<Object[]> result = boardRespository.getBoardWithReplyCount(pageable);
     // // for (Object[] objects : result) {
     // // // System.out.println(Arrays.toString(objects));
     // // Board board = (Board) objects[0];
     // // Member member = (Member) objects[1];
     // // Long replyCnt = (Long) objects[2];
-
     // // System.out.println(board);
     // // System.out.println(member);
     // // System.out.println(replyCnt);
@@ -174,24 +177,21 @@ public class BoardRepositoryTest {
     // Board board = (Board) obj[0];
     // Member member = (Member) obj[1];
     // Long replyCnt = (Long) obj[2];
-    // System.out.println(board);
-    // System.out.println(member);
-    // System.out.println(replyCnt);
     // });
 
-    // // Object[] objects
+    // // Object[] => String
     // Function<Object[], String> f = Arrays::toString;
-    // result.get().forEach(obj -> System.out.println(f.apply(obj)));
 
+    // // Object[] objects
+    // result.get().forEach(obj -> System.out.println(f.apply(obj))); //
+    // [Ljava.lang.Object;@2a19eaf0
     // }
 
     @Test
     public void getBoardByBnoTest() {
-
-        Object result = boardRepository.getBoardByBno(33L);
+        Object result = boardRespository.getBoardByBno(601L);
         Object[] arr = (Object[]) result;
         System.out.println(Arrays.toString(arr));
-
     }
 
     // delete 테스트
@@ -199,10 +199,8 @@ public class BoardRepositoryTest {
     @Transactional
     @Test
     public void deleteByBnoTest() {
-
         replyRepository.deleteByBno(91L);
-        boardRepository.deleteById(91L);
-
+        boardRespository.deleteById(91L);
     }
 
     // querydsl 테스트
@@ -217,15 +215,16 @@ public class BoardRepositoryTest {
                 .keyword("title")
                 .build();
 
-        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize(),
-                Sort.by("bno").descending().and(Sort.by("title").ascending()));
-
         // Pageable pageable = PageRequest.of(pageRequestDTO.getPage(),
-        // pageRequestDTO.getSize());
+        // pageRequestDTO.getSize(),
+        // Sort.by("bno").descending().and(Sort.by("title").ascending()));
 
-        Page<Object[]> result = boardRepository.list(pageRequestDTO.getType(), pageRequestDTO.getKeyword(), pageable);
+        Pageable pageable = PageRequest.of(pageRequestDTO.getPage(), pageRequestDTO.getSize());
+        Page<Object[]> result = boardRespository.list(pageRequestDTO.getType(), pageRequestDTO.getKeyword(), pageable);
+
         for (Object[] objects : result) {
             System.out.println(Arrays.toString(objects));
         }
     }
+
 }
