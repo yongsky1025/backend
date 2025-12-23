@@ -25,7 +25,9 @@
               </div>
               <div class="mb-3">
                 <label for="content" class="form-label">CONTENT</label>
-                <textarea name="content" id="content" rows="10" class="form-control">[[${dto.content}]]</textarea>
+                <textarea name="content" id="content" rows="10" class="form-control" disabled>
+[[${dto.content}]]</textarea
+                >
               </div>
               <div class="mb-3">
                 <label for="createDate" class="form-label">CREATEDATE</label>
@@ -41,6 +43,7 @@
               <a
                 type="button"
                 class="btn btn-success"
+                th:if="${dto.writerEmail} == ${#authentication.name}"
                 th:href="@{/board/modify(bno=${dto.bno},page=${pageRequestDTO.page},size=${pageRequestDTO.size})}"
                 >수정</a
               >
@@ -59,10 +62,20 @@
     <!-- 댓글 영역 -->
     <div class="card">
       <div class="card-body">
-        <form action="" method="post" id="replyForm">
+        <form th:action="@{/replies/new}" method="post" id="replyForm" sec:authorize="isAuthenticated()">
           <input type="hidden" name="rno" />
+          <!-- 로그인 사용자의 아이디에 해당하는 이메일  -->
+          <input type="hidden" name="replyerEmail" th:value="${#authentication.name}" />
           <div class="mb-3">
-            <input type="text" class="form-control" id="replyer" name="replyer" placeholder="작성자" />
+            <input
+              type="text"
+              class="form-control"
+              id="replyerName"
+              name="replyerName"
+              placeholder="작성자"
+              th:value="${#authentication.principal.name}"
+              readonly
+            />
           </div>
           <div class="mb-3">
             <textarea name="text" id="text" rows="3" class="form-control" placeholder="댓글 작성"></textarea>
@@ -70,35 +83,30 @@
           <button type="submit" class="btn btn-primary" name="rbtn">댓글 작성</button>
         </form>
         <h5 class="card-title fw-semibold my-4"><span>[[${dto.replyCnt}]]</span> 개의 댓글</h5>
-        <div class="replyList boarder px-2">
+        <div class="replyList border px-2">
           <!-- <div class="d-flex justify-content-between my-2 border-bottom">
-          <div class="p-3">
-            <img
-              th:src="@{/img/himkuma.jpg}"
-              alt=""
-              class="rounded-circle.mx-auto.d-block"
-              style="width: 60px; height: 60px"
-            />
-          </div>
-          <div class="flex-grow-1 align-self-center">
-            <div>작성자</div>
-            <div>
-              <span class="fs-5">내용</span>
+            <div class="p-3">
+              <img th:src="@{/img/user.png}" alt="" class="rounded-circle mx-auto d-block" style="width: 60px; height: 60px" />
             </div>
-            <div class="text-muted">
-              <span class="small">댓글작성일</span>
+            <div class="flex-grow-1 align-self-center">
+              <div>작성자</div>
+              <div>
+                <span class="fs-5">내용</span>
+              </div>
+              <div class="text-muted">
+                <span class="small">댓글작성일</span>
+              </div>
             </div>
-          </div>
 
-          <div class="d-flex flex-column align-self-center">
-            <div class="mb-2">
-              <botton class="btn btn-outline-success btn-sm">수정</botton>
+            <div class="d-flex flex-column align-self-center">
+              <div class="mb-2">
+                <button class="btn btn-outline-danger btn-sm">삭제</button>
+              </div>
+              <div class="mb-2">
+                <button class="btn btn-outline-success btn-sm">수정</button>
+              </div>
             </div>
-            <div class="mb-2">
-              <botton class="btn btn-outline-danger btn-sm">삭제</botton>
-            </div>
-          </div>
-        </div> -->
+          </div> -->
         </div>
       </div>
     </div>
@@ -107,8 +115,16 @@
     <script th:inline="javascript">
 
       let msg = [[${msg}]];
-      const bno = [[${dto.bno}]]
+      const bno = [[${dto.bno}]];
+      // replyForm 에서 CSRF 값 가져오기
+      const replyForm = document.querySelector("#replyForm");
 
+      let csrfVal = undefined; // ''공백도 상관없
+      if (replyForm) {
+       csrfVal = replyForm.querySelector("[name='_csrf']").value
+      }
+      // 현재 로그인 사용자 이메일 가져오기
+      const loginUser = [[${#authentication.name}]];
       if (msg) {
           Swal.fire({
               title: msg,
@@ -117,7 +133,6 @@
           });
       }
     </script>
-
     <script th:src="@{/js/read.js}"></script>
   </th:block>
 </html>

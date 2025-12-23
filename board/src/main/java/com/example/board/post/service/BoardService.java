@@ -16,7 +16,7 @@ import com.example.board.post.dto.BoardDTO;
 import com.example.board.post.dto.PageRequestDTO;
 import com.example.board.post.dto.PageResultDTO;
 import com.example.board.post.entity.Board;
-import com.example.board.post.repository.BoardRepository;
+import com.example.board.post.repository.BoardRespository;
 import com.example.board.reply.repository.ReplyRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final BoardRepository boardRespository;
+    private final BoardRespository boardRespository;
     private final ReplyRepository replyRepository;
 
     // crud

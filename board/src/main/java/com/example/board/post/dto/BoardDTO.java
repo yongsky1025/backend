@@ -2,11 +2,15 @@ package com.example.board.post.dto;
 
 import java.time.LocalDateTime;
 
+import com.querydsl.core.annotations.Generated;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @NoArgsConstructor

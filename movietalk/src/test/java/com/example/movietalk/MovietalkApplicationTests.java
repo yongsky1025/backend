@@ -1,12 +1,10 @@
-package com.example.board;
+package com.example.movietalk;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-// @Disabled
 @SpringBootTest
-class BoardApplicationTests {
+class MovietalkApplicationTests {
 
 	@Test
 	void contextLoads() {

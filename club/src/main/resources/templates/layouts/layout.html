@@ -49,8 +49,7 @@
         </div>
       </div>
     </div>
-
-    <form th:action="@{/member/logout}" method="post" id="logoutForm"></form>
+    <form sec:authorize="isAuthenticated()" th:action="@{/member/logout}" method="post" id="logoutForm"></form>
     <script th:src="@{/assets/libs/jquery/dist/jquery.min.js}"></script>
     <script th:src="@{/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js}"></script>
     <script th:src="@{/assets/js/sidebarmenu.js}"></script>

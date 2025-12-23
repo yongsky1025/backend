@@ -23,7 +23,7 @@ import com.example.board.member.entity.constant.MemberRole;
 import com.example.board.member.repository.MemberRepository;
 import com.example.board.post.dto.PageRequestDTO;
 import com.example.board.post.entity.Board;
-import com.example.board.post.repository.BoardRepository;
+import com.example.board.post.repository.BoardRespository;
 import com.example.board.reply.entity.Reply;
 import com.example.board.reply.repository.ReplyRepository;
 
@@ -32,7 +32,7 @@ import com.example.board.reply.repository.ReplyRepository;
 public class BoardRepositoryTest {
 
     @Autowired
-    private BoardRepository boardRespository;
+    private BoardRespository boardRespository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;

@@ -11,7 +11,7 @@ import com.example.board.post.entity.Board;
 
 import java.util.List;
 
-public interface BoardRepository extends JpaRepository<Board, Long>, SearchBoardRepository {
+public interface BoardRespository extends JpaRepository<Board, Long>, SearchBoardRepository {
 
     // on 구문 생략 기준 : 일치하는 컬럼
     @Query("select b,m from Board b join b.writer m")

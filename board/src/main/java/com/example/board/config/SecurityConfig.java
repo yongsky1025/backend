@@ -6,6 +6,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -34,34 +35,53 @@ public class SecurityConfig {
     @Bean // == 객체 생성
     SecurityFilterChain securityFilterChain(HttpSecurity http, RememberMeServices rememberMeServices) throws Exception {
 
+        // http.authorizeHttpRequests(authorize -> authorize
+        // .requestMatchers("/", "/assets/**", "/member/auth", "/img/**", "/js/**",
+        // "/board/assets/images/**")
+        // .permitAll()
+        // .requestMatchers("/member/register").permitAll()
+        // .requestMatchers("/board/list", "/board/read").permitAll()
+        // .requestMatchers("/board/modify", "/board/remove").hasAnyRole("ADMIN",
+        // "MANAGER", "USER")
+        // .requestMatchers("/board/create").authenticated()
+
+        // .requestMatchers("/replies/board/**").permitAll()
+        // // .requestMatchers("/replies/**").authenticated()
+
+        // .requestMatchers("/member/profile").hasRole("USER")
+        // .requestMatchers("/manager/**").hasAnyRole("MANAGER")
+        // .requestMatchers("/admin/**").hasAnyRole("ADMIN"))
+        // // .httpBasic(Customizer.withDefaults());
+        // .formLogin(login -> login
+        // .loginPage("/member/login").permitAll()
+        // // .loginProcessingUrl("/member/login")
+        // // .defaultSuccessUrl("/", true))
+        // .successHandler(loginSuccessHandler()))
+        // .oauth2Login(login -> login.successHandler(loginSuccessHandler())) // 소셜 로그인
+        // 가능
+        // .logout(logout -> logout
+        // .logoutUrl("/member/logout") // 로그아웃 post 로 처리
+        // .logoutSuccessUrl("/")
+        // .invalidateHttpSession(true)
+        // .deleteCookies("JSESSIONID"))
+        // // 토큰 기반 처리(예전에는 db 기반)
+        // .rememberMe(remember -> remember.rememberMeServices(rememberMeServices));
         http.authorizeHttpRequests(authorize -> authorize
-                .requestMatchers("/", "/assets/**", "/member/auth", "/img/**", "/js/**", "/board/assets/images/**")
-                .permitAll()
-                .requestMatchers("/member/register").permitAll()
-                .requestMatchers("/board/list", "/board/read").permitAll()
-                .requestMatchers("/board/modify", "/board/remove").hasAnyRole("ADMIN", "MANAGER", "USER")
-                .requestMatchers("/board/create").authenticated()
+                .requestMatchers("/", "/assets/**", "/img/**", "/js/**").permitAll()
+                .anyRequest().permitAll());
 
-                .requestMatchers("/replies/board/**").permitAll()
-                .requestMatchers("/replies/new").authenticated()
+        http.formLogin(login -> login.loginPage("/member/login")
+                .successHandler(loginSuccessHandler()).permitAll());
 
-                .requestMatchers("/member/profile").hasRole("USER")
-                .requestMatchers("/manager/**").hasAnyRole("MANAGER")
-                .requestMatchers("/admin/**").hasAnyRole("ADMIN"))
-                // .httpBasic(Customizer.withDefaults());
-                .formLogin(login -> login
-                        .loginPage("/member/login").permitAll()
-                        // .loginProcessingUrl("/member/login")
-                        // .defaultSuccessUrl("/", true))
-                        .successHandler(loginSuccessHandler()))
-                .oauth2Login(login -> login.successHandler(loginSuccessHandler())) // 소셜 로그인 가능
-                .logout(logout -> logout
-                        .logoutUrl("/member/logout") // 로그아웃 post 로 처리
-                        .logoutSuccessUrl("/")
-                        .invalidateHttpSession(true)
-                        .deleteCookies("JSESSIONID"))
-                // 토큰 기반 처리(예전에는 db 기반)
-                .rememberMe(remember -> remember.rememberMeServices(rememberMeServices));
+        http.oauth2Login(login -> login.successHandler(loginSuccessHandler()));
+
+        http.logout(logout -> logout
+                .logoutUrl("/member/logout")
+                .logoutSuccessUrl("/"));
+
+        http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
+
+        http.rememberMe(remember -> remember.rememberMeServices(rememberMeServices));
 
         return http.build();
     }

@@ -1,6 +1,7 @@
 package com.example.board.post.controller;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,6 +37,7 @@ public class PostController {
         log.info("작성 폼 요청");
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/create")
     public String postCreate(@Valid BoardDTO dto, BindingResult result, RedirectAttributes rttr) {
         log.info("작성 {}", dto);
@@ -53,7 +55,7 @@ public class PostController {
 
     @PreAuthorize("authentication.name == #dto.writerEmail")
     @PostMapping("/remove")
-    public String postDelete(BoardDTO dto, PageRequestDTO pageRequestDTO, RedirectAttributes rttr) {
+    public String postDelete(@P("dto") BoardDTO dto, PageRequestDTO pageRequestDTO, RedirectAttributes rttr) {
         log.info("삭제 {} {}", dto, pageRequestDTO);
 
         boardService.delete(dto);
@@ -75,7 +77,8 @@ public class PostController {
 
     @PreAuthorize("authentication.name == #dto.writerEmail")
     @PostMapping("/modify")
-    public String postModify(BoardDTO dto, PageRequestDTO pageRequestDTO, RedirectAttributes rttr) {
+    public String postModify(@P("dto") BoardDTO dto, PageRequestDTO pageRequestDTO,
+            RedirectAttributes rttr) {
         log.info("수정 {} {}", dto, pageRequestDTO);
 
         boardService.update(dto);
