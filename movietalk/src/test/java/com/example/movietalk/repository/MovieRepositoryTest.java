@@ -1,6 +1,7 @@
 package com.example.movietalk.repository;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
 
@@ -13,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.annotation.Commit;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.movietalk.member.entity.Member;
 import com.example.movietalk.member.entity.constant.Role;
@@ -42,11 +45,42 @@ public class MovieRepositoryTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Disabled
+    @Commit
+    @Transactional
+    @Test
+    public void deleteByMemberTest() {
+        // 회원삭제
+        // 1. 회원이 작성한 리뷰 제거
+        reviewRepository.deleteByMember(Member.builder().mid(3L).build());
+        // 2. 회원 삭제
+        memberRepository.deleteById(3L);
+    }
+
+    // @Transactional(readOnly = true)
+    @Test
+    public void getMovieReviewTest() {
+        List<Review> result = reviewRepository.findByMovie(Movie.builder().mno(86L).build());
+
+        result.forEach(r -> {
+            System.out.println(r);
+            // 리뷰작성자 조회
+            System.out.println(r.getMember().getEmail());
+        });
+    }
+
     @Test
     public void getMovieWithAllTest() {
 
-        Object[] result = movieRepository.getMovieWithAll(100L);
-        System.out.println(Arrays.toString(result));
+        List<Object[]> result = movieRepository.getMovieWithAll(100L);
+        // [Movie(mno=100, title=Movie Title 100), MovieImage(inum=325,
+        // uuid=2161009c-7d2d-468f-9837-658341d93b00, path=null, imgName=test0.jpg,
+        // ord=0), 1, 3.0]
+
+        for (Object[] objects : result) {
+
+            System.out.println(Arrays.toString(objects));
+        }
     }
 
     // 조회
@@ -58,7 +92,15 @@ public class MovieRepositoryTest {
 
         Page<Object[]> result = movieRepository.getListPage(pageable);
         for (Object[] objects : result) {
-            System.out.println(Arrays.toString(objects));
+            // System.out.println(Arrays.toString(objects));
+            Movie movie = (Movie) objects[0];
+            MovieImage movieImage = (MovieImage) objects[1];
+            Long reviewCnt = (Long) objects[2];
+            Double avgGrade = (Double) objects[3];
+            System.out.println(movie);
+            System.out.println(movieImage);
+            System.out.println(reviewCnt);
+            System.out.println(avgGrade);
         }
     }
 
