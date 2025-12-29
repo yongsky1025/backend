@@ -15,7 +15,7 @@
                 class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                 placeholder="제목"
                 name="title"
-                value=""
+                th:value="${dto.title}"
                 readonly
               />
             </label>
@@ -27,7 +27,7 @@
                 class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                 placeholder="리뷰수"
                 name="reviewCnt"
-                value=""
+                th:value="${dto.reviewCnt}"
                 readonly
               />
             </label>
@@ -39,7 +39,7 @@
                 class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
                 placeholder="avg"
                 name="avg"
-                value=""
+                th:value="${dto.avg}"
                 readonly
               />
             </label>
