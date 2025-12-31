@@ -27,6 +27,7 @@ import com.example.movietalk.movie.repository.MovieImageRepository;
 import com.example.movietalk.movie.repository.MovieRepository;
 import com.example.movietalk.movie.repository.ReviewRepository;
 
+@Disabled
 @SpringBootTest
 public class MovieRepositoryTest {
 
@@ -49,6 +50,18 @@ public class MovieRepositoryTest {
     @Commit
     @Transactional
     @Test
+    public void deleteByMovieTest() {
+        Movie movie = movieRepository.findById(103L).get();
+        // 영화 이미지 삭제
+        movieImageRepository.deleteByMovie(movie);
+        // 영화 삭제
+        movieRepository.delete(movie);
+    }
+
+    @Disabled
+    @Commit
+    @Transactional
+    @Test
     public void deleteByMemberTest() {
         // 회원삭제
         // 1. 회원이 작성한 리뷰 제거
@@ -60,12 +73,20 @@ public class MovieRepositoryTest {
     // @Transactional(readOnly = true)
     @Test
     public void getMovieReviewTest() {
-        List<Review> result = reviewRepository.findByMovie(Movie.builder().mno(86L).build());
+        List<Review> result = reviewRepository.findByMovie(Movie.builder().mno(100L).build());
 
         result.forEach(r -> {
-            System.out.println(r);
+            // 리뷰 정보
+            System.out.print(r.getRno() + "\t");
+            System.out.print(r.getGrade() + "\t");
+            System.out.print(r.getText() + "\t");
             // 리뷰작성자 조회
-            System.out.println(r.getMember().getEmail());
+            System.out.print(r.getMember().getEmail() + "\t");
+            System.out.print(r.getMember().getMid());
+            System.out.print(r.getMember().getNickname() + "\t");
+
+            // 영화정보 조회
+            System.out.println(r.getMovie().getMno());
         });
     }
 

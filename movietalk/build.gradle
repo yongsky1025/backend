@@ -36,9 +36,6 @@ dependencies {
 	// 썸네일
 	implementation 'net.coobird:thumbnailator:0.4.21'
 
-
-
-
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'

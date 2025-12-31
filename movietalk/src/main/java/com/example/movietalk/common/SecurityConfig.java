@@ -37,8 +37,9 @@ public class SecurityConfig {
                 .requestMatchers("/", "/assets/**", "/img/**", "/js/**").permitAll()
                 .anyRequest().permitAll());
 
-        // http.formLogin(login -> login.loginPage("/member/login")
-        // .successHandler(loginSuccessHandler()).permitAll());
+        http.formLogin(login -> login.loginPage("/member/login").permitAll());
+
+        // .successHandler(loginSuccessHandler())
 
         // http.oauth2Login(login -> login.successHandler(loginSuccessHandler()));
 
@@ -49,7 +50,7 @@ public class SecurityConfig {
         http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS));
 
         // csrf 기능 중지
-        http.csrf(csrf -> csrf.disable());
+        // http.csrf(csrf -> csrf.disable());
         // http.csrf(csrf -> csrf.ignoringRequestMatchers("/replies/**"));
 
         // http.rememberMe(remember -> remember.rememberMeServices(rememberMeServices));
