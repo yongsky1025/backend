@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: movietalk
+
+  # thymeleaf
+  thymeleaf:
+    cache: false
+
+  # DB 서버 연동 정보
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/movie
+    username: javadb
+    password: 12345
+
+  # 테이블 자동 생성 여부
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    properties:
+      hibernate:
+        format_sql: true
+        highlight_sql: true
+
+  profiles:
+    include: oauth2
+
+  # 파일 업로드 설정
+  # 파일 업로드 가능 여부
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 30MB
+
+# 실제 파일이 업로드 될 경로(클래스파일에서 호출)
+
+com:
+  example:
+    movietalk:
+      upload:
+        path: c:\\upload
+
+# 로그출력(개발용)
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        orm:
+          jdbc:
+            bind: trace

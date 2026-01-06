@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,8 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     // 특정 영화에 달려있는 리뷰 가져오기 /reviews/300(mno)/all + GET
+
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/{mno}/all")
     public List<ReviewDTO> getReviews(@PathVariable Long mno) {
         log.info("특정 영화 전체 리뷰 요청 {}", mno);
@@ -40,6 +43,7 @@ public class ReviewController {
 
     // 특정 영화의 리뷰 수정
     // 1) 영화 가져오기 /reviews/mno/rno + GET
+    // 로그인 사용자 == 리뷰 사용자
     @GetMapping("/{mno}/{rno}")
     public ReviewDTO getReview(@PathVariable Long rno) {
         log.info("특정 영화 특정 리뷰 요청 {}", rno);
@@ -48,6 +52,7 @@ public class ReviewController {
     }
 
     // 2) 수정 /reviews/300/rno + PUT
+    @PreAuthorize("authentication.name == #dto.email")
     @PutMapping("/{mno}/{rno}")
     public ResponseEntity<Long> putReview(@PathVariable Long rno, @RequestBody ReviewDTO dto) {
         log.info("특정 영화 특정 리뷰 수정 {}", dto);
@@ -59,8 +64,9 @@ public class ReviewController {
     }
 
     // 특정 영화의 리뷰 삭제 /reviews/300/rno + DELETE
+    @PreAuthorize("authentication.name == #email")
     @DeleteMapping("/{mno}/{rno}")
-    public ResponseEntity<String> deleteReview(@PathVariable Long rno) {
+    public ResponseEntity<String> deleteReview(@PathVariable Long rno, String email) {
         log.info("특정 영화 특정 리뷰 삭제 {}", rno);
         reviewService.deleteRow(rno);
 
@@ -68,6 +74,7 @@ public class ReviewController {
     }
 
     // 특정 영화의 리뷰 추가 /reviews/300 + POST
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/{mno}")
     public Long postReview(@PathVariable Long mno, @RequestBody ReviewDTO dto) {
         log.info("특정 영화 특정 리뷰 추가 {}", dto);

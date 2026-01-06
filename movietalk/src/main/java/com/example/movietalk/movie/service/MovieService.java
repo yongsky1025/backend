@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -76,7 +77,8 @@ public class MovieService {
         // Movie 첫번째 배열의 첫번째 Movie 만 가져오기
         Movie movie = (Movie) result.get(0)[0];
 
-        List<MovieImage> movieImages = result.stream().map(en -> (MovieImage) en[1]).collect(Collectors.toList());
+        List<MovieImage> movieImages = result.stream()
+                .map(en -> (MovieImage) en[1]).collect(Collectors.toList());
 
         // review 수 / 평점 첫번째 배열의 첫번째 값들 가져오기
         Long reviewCnt = (Long) result.get(0)[2];
@@ -180,8 +182,10 @@ public class MovieService {
         // });
 
         // 방법2
-        Function<Object[], MovieDTO> function = (obj -> entityToDto((Movie) obj[0], List.of((MovieImage) obj[1]),
-                (Long) obj[2], (Double) obj[3]));
+        Function<Object[], MovieDTO> function = (obj -> {
+            List<MovieImage> images = (obj[1] == null) ? List.of() : List.of((MovieImage) obj[1]);
+            return entityToDto((Movie) obj[0], images, (Long) obj[2], (Double) obj[3]);
+        });
 
         List<MovieDTO> dtoList = result.stream().map(function).collect(Collectors.toList());
 
@@ -203,14 +207,15 @@ public class MovieService {
                 .createDate(movie.getCreateDate())
                 .build();
         // List<MovieImage> => List<MovieImageDTO>
-        List<MovieImageDTO> imageDTOs = mImages.stream().map(movieImage -> {
-            return MovieImageDTO.builder()
-                    .inum(movieImage.getInum())
-                    .imgName(movieImage.getImgName())
-                    .uuid(movieImage.getUuid())
-                    .path(movieImage.getPath())
-                    .build();
-        }).collect(Collectors.toList());
+        List<MovieImageDTO> imageDTOs = mImages.stream()
+                .filter(Objects::nonNull).map(movieImage -> {
+                    return MovieImageDTO.builder()
+                            .inum(movieImage.getInum())
+                            .imgName(movieImage.getImgName())
+                            .uuid(movieImage.getUuid())
+                            .path(movieImage.getPath())
+                            .build();
+                }).collect(Collectors.toList());
 
         movieDTO.setMovieImages(imageDTOs);
 

@@ -3,6 +3,7 @@ package com.example.movietalk.movie.controller;
 import java.util.List;
 
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,6 +32,7 @@ public class MovieController {
 
     private final MovieService movieService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/remove")
     public String postRemove(Long mno, RedirectAttributes rttr, PageRequestDTO pageRequestDTO) {
         log.info("삭제 {}", mno);
@@ -41,6 +43,7 @@ public class MovieController {
         return "redirect:/movie/list";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping({ "/read", "/modify" })
     public void getRead(@RequestParam Long mno, Model model, PageRequestDTO pageRequestDTO) {
         log.info("get or modify {}", mno);
@@ -49,6 +52,7 @@ public class MovieController {
         model.addAttribute("dto", movieDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/modify")
     public String postModify(MovieDTO movieDTO, RedirectAttributes rttr, PageRequestDTO pageRequestDTO) {
         log.info("영화 수정 요청 {}", movieDTO);
@@ -61,11 +65,13 @@ public class MovieController {
         return "redirect:/movie/read";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/create")
     public void getCreate(PageRequestDTO pageRequestDTO) {
         log.info("영화 추가 폼 요청 ");
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/create")
     public String postCreate(MovieDTO movieDTO, RedirectAttributes rttr, PageRequestDTO pageRequestDTO) {
         log.info("영화 추가 요청 {}", movieDTO);
@@ -76,6 +82,7 @@ public class MovieController {
         rttr.addAttribute("page", "1");
         rttr.addAttribute("size", pageRequestDTO.getSize());
         return "redirect:/movie/list";
+
     }
 
     @GetMapping("/list")

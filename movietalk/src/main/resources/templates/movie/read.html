@@ -48,8 +48,8 @@
             </label>
           </div>
           <div class="mt-4">
-            <!-- sec:authorize="hasRole('ADMIN')" -->
             <a
+              sec:authorize="hasRole('ADMIN')"
               th:href="@{modify(mno=${dto.mno},page=${pageRequestDTO.page},size=${pageRequestDTO.size})}"
               class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
               >수정</a
@@ -89,15 +89,17 @@
 
       <!-- 리뷰작성 -->
       <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-        <form action="" method="post" id="reviewForm">
+        <form action="" method="post" id="reviewForm" sec:authorize="hasAnyRole('MEMEBER','ADMIN')">
           <input type="hidden" name="rno" />
-          <input type="hidden" name="mid" />
+          <input type="hidden" name="mid" th:value="${#authentication.principal.customUserDTO.mid}" />
+          <input type="hidden" name="email" />
           <input type="hidden" name="mno" />
           <input type="hidden" name="grade" />
           <div class="mt-4">
             <label class="block text-sm">
               <span class="text-gray-700 dark:text-gray-400">작성자</span>
               <input
+                th:value="${#authentication.principal.customUserDTO.nickname}"
                 readonly
                 name="nickname"
                 class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
@@ -153,6 +155,9 @@
     <script>
       const title = "[[${dto.title}]]";
       const mno = "[[${dto.mno}]]";
+
+      const csrfVal = "[[${_csrf.token}]]";
+      const loginUser = "[[${#authentication.name}]]";
 
       let grade = 0;
       $(".starrr").starrr({
